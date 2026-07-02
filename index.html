@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>授業課題管理アプリ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px #ccc;
+    }
+
+    input, select, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .message {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
+
+    ul {
+      background: #fafafa;
+      padding: 15px 30px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>授業課題管理アプリ</h1>
+
+  <section>
+    <h2>授業登録</h2>
+    <input type="text" id="subjectName" placeholder="授業名を入力してください">
+    <button onclick="registerSubject()">授業を登録</button>
+    <p id="subjectMessage" class="message"></p>
+  </section>
+
+  <section>
+    <h2>課題登録</h2>
+    <select id="subjectSelect"></select>
+    <input type="text" id="assignmentName" placeholder="課題名を入力してください">
+    <button onclick="registerAssignment()">課題を登録</button>
+    <p id="assignmentMessage" class="message"></p>
+  </section>
+
+  <section>
+    <h2>登録一覧</h2>
+    <button onclick="showList()">一覧を更新</button>
+    <div id="listArea"></div>
+  </section>
+
+  <script>
+    let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+
+    function saveData() {
+      localStorage.setItem("subjects", JSON.stringify(subjects));
+    }
+
+    function registerSubject() {
+      const subjectNameInput = document.getElementById("subjectName");
+      const message = document.getElementById("subjectMessage");
+      const subjectName = subjectNameInput.value.trim();
+
+      if (subjectName === "") {
+        message.textContent = "エラー：授業名を入力してください。";
+        message.className = "message error";
+        return;
+      }
+
+      subjects.push({
+        name: subjectName,
+        assignments: []
+      });
+
+      saveData();
+
+      message.textContent = "授業を登録しました。";
+      message.className = "message success";
+      subjectNameInput.value = "";
+
+      updateSubjectSelect();
+      showList();
+    }
+
+    function updateSubjectSelect() {
+      const select = document.getElementById("subjectSelect");
+      select.innerHTML = "";
+
+      if (subjects.length === 0) {
+        const option = document.createElement("option");
+        option.textContent = "授業が登録されていません";
+        option.value = "";
+        select.appendChild(option);
+        return;
+      }
+
+      subjects.forEach((subject, index) => {
+        const option = document.createElement("option");
+        option.textContent = subject.name;
+        option.value = index;
+        select.appendChild(option);
+      });
+    }
+
+    function registerAssignment() {
+      const select = document.getElementById("subjectSelect");
+      const assignmentInput = document.getElementById("assignmentName");
+      const message = document.getElementById("assignmentMessage");
+
+      if (subjects.length === 0) {
+        message.textContent = "エラー：授業が登録されていません。先に授業を登録してください。";
+        message.className = "message error";
+        return;
+      }
+
+      const assignmentName = assignmentInput.value.trim();
+
+      if (assignmentName === "") {
+        message.textContent = "エラー：課題名を入力してください。";
+        message.className = "message error";
+        return;
+      }
+
+      const subjectIndex = Number(select.value);
+      subjects[subjectIndex].assignments.push(assignmentName);
+
+      saveData();
+
+      message.textContent = "課題を登録しました。";
+      message.className = "message success";
+      assignmentInput.value = "";
+
+      showList();
+    }
+
+    function showList() {
+      const listArea = document.getElementById("listArea");
+      listArea.innerHTML = "";
+
+      if (subjects.length === 0) {
+        listArea.textContent = "授業が登録されていません。";
+        return;
+      }
+
+      subjects.forEach((subject, i) => {
+        const title = document.createElement("h3");
+        title.textContent = `${i + 1}. ${subject.name}`;
+        listArea.appendChild(title);
+
+        const ul = document.createElement("ul");
+
+        if (subject.assignments.length === 0) {
+          const li = document.createElement("li");
+          li.textContent = "課題なし";
+          ul.appendChild(li);
+        } else {
+          subject.assignments.forEach((assignment, j) => {
+            const li = document.createElement("li");
+            li.textContent = `${j + 1}. ${assignment}`;
+            ul.appendChild(li);
+          });
+        }
+
+        listArea.appendChild(ul);
+      });
+    }
+
+    updateSubjectSelect();
+    showList();
+  </script>
+
+</body>
+</html>
