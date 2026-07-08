@@ -1,162 +1,142 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>授業課題管理アプリ</title>
+    <meta charset="UTF-8">
+    <title>授業課題管理アプリ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
 
-<style>
-* {
-    box-sizing: border-box;
-}
+        h1 {
+            text-align: center;
+        }
 
-body {
-    margin: 0;
-    padding: 20px;
-    background: #f3f4f6;
-    font-family: sans-serif;
-    color: #333;
-}
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
+        .card {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-}
+        .form-group {
+            margin-bottom: 12px;
+        }
 
-.card {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-h2 {
-    margin-top: 0;
-}
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
 
-.form-group {
-    margin-bottom: 12px;
-}
+        button {
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
+        button:hover {
+            background-color: #555;
+        }
 
-input,
-select,
-button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-}
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
 
-button {
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background: #2563eb;
-    color: white;
-    font-weight: bold;
-}
+        .error {
+            color: red;
+        }
 
-button:hover {
-    opacity: 0.9;
-}
+        .success {
+            color: green;
+        }
 
-.message {
-    margin-top: 10px;
-    font-weight: bold;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
 
-.error {
-    color: red;
-}
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+            min-width: 90px;
+        }
 
-.success {
-    color: green;
-}
+        th {
+            background-color: #e8e8e8;
+        }
 
-.table-wrapper {
-    overflow-x: auto;
-}
+        .subject-name {
+            font-weight: bold;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-}
+        .assignment-count {
+            font-size: 14px;
+            color: #555;
+        }
 
-th,
-td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-}
+        .subject-list-item {
+            background-color: #fafafa;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
 
-th {
-    background: #e5e7eb;
-}
+        ul {
+            margin-top: 5px;
+        }
 
-.timetable-cell {
-    min-height: 70px;
-    font-size: 14px;
-}
+        @media screen and (max-width: 700px) {
+            body {
+                padding: 10px;
+            }
 
-.subject-name {
-    font-weight: bold;
-}
+            table {
+                font-size: 12px;
+            }
 
-.assignment-count {
-    margin-top: 5px;
-    color: #2563eb;
-    font-size: 13px;
-}
+            th,
+            td {
+                padding: 6px;
+                min-width: 60px;
+            }
 
-.subject-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 10px;
-}
-
-.assignment-list {
-    margin-top: 8px;
-    padding-left: 20px;
-}
-
-.empty {
-    color: #777;
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .card {
-        padding: 15px;
-    }
-
-    input,
-    select,
-    button {
-        font-size: 15px;
-    }
-}
-</style>
+            input,
+            select,
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-
     <h1>授業課題管理アプリ</h1>
 
     <!-- 授業登録 -->
@@ -165,7 +145,7 @@ th {
 
         <div class="form-group">
             <label>曜日</label>
-            <select id="day">
+            <select id="daySelect">
                 <option value="月曜">月曜</option>
                 <option value="火曜">火曜</option>
                 <option value="水曜">水曜</option>
@@ -177,7 +157,7 @@ th {
 
         <div class="form-group">
             <label>時限</label>
-            <select id="period">
+            <select id="periodSelect">
                 <option value="1限">1限</option>
                 <option value="2限">2限</option>
                 <option value="3限">3限</option>
@@ -189,7 +169,7 @@ th {
 
         <div class="form-group">
             <label>授業名</label>
-            <input type="text" id="subjectName">
+            <input type="text" id="subjectName" placeholder="授業名を入力してください">
         </div>
 
         <button onclick="registerSubject()">授業を登録する</button>
@@ -202,13 +182,13 @@ th {
         <h2>課題登録</h2>
 
         <div class="form-group">
-            <label>授業選択</label>
-            <select id="subjectSelect"></select>
+            <label>課題を登録する授業</label>
+            <select id="assignmentSubjectSelect"></select>
         </div>
 
         <div class="form-group">
             <label>課題名</label>
-            <input type="text" id="assignmentName">
+            <input type="text" id="assignmentName" placeholder="課題名を入力してください">
         </div>
 
         <button onclick="registerAssignment()">課題を登録する</button>
@@ -216,292 +196,293 @@ th {
         <div id="assignmentMessage" class="message"></div>
     </div>
 
-    <!-- 時間割 -->
+    <!-- 授業削除 -->
+    <div class="card">
+        <h2>授業削除</h2>
+
+        <div class="form-group">
+            <label>削除する授業</label>
+            <select id="deleteSubjectSelect"></select>
+        </div>
+
+        <button onclick="deleteSubject()">授業を削除する</button>
+
+        <div id="deleteMessage" class="message"></div>
+    </div>
+
+    <!-- 時間割表示 -->
     <div class="card">
         <h2>時間割表</h2>
-
-        <div class="table-wrapper">
-            <table id="timetable">
-                <thead>
-                    <tr>
-                        <th>時限</th>
-                        <th>月曜</th>
-                        <th>火曜</th>
-                        <th>水曜</th>
-                        <th>木曜</th>
-                        <th>金曜</th>
-                        <th>土曜</th>
-                    </tr>
-                </thead>
-                <tbody id="timetableBody"></tbody>
-            </table>
-        </div>
+        <div id="timetableArea"></div>
     </div>
 
-    <!-- 一覧 -->
+    <!-- 一覧表示 -->
     <div class="card">
         <h2>授業・課題一覧</h2>
-        <div id="subjectList"></div>
+        <div id="subjectListArea"></div>
     </div>
-
 </div>
 
 <script>
-const STORAGE_KEY = "subjects";
+    const days = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜"];
+    const periods = ["1限", "2限", "3限", "4限", "5限", "6限"];
 
-const DAYS = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜"];
-const PERIODS = ["1限", "2限", "3限", "4限", "5限", "6限"];
+    let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
 
-let subjects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
-}
-
-function showMessage(elementId, text, success = false) {
-    const element = document.getElementById(elementId);
-
-    element.textContent = text;
-    element.className = success
-        ? "message success"
-        : "message error";
-}
-
-function registerSubject() {
-
-    const day = document.getElementById("day").value;
-    const period = document.getElementById("period").value;
-    const name = document.getElementById("subjectName").value.trim();
-
-    if (name === "") {
-        showMessage(
-            "subjectMessage",
-            "エラー：授業名を入力してください。"
-        );
-        return;
+    function saveData() {
+        localStorage.setItem("subjects", JSON.stringify(subjects));
     }
 
-    const exists = subjects.some(subject =>
-        subject.day === day &&
-        subject.period === period
-    );
+    function showMessage(id, text, success = false) {
+        const message = document.getElementById(id);
+        message.textContent = text;
 
-    if (exists) {
-        showMessage(
-            "subjectMessage",
-            "エラー：この曜日・時限にはすでに授業が登録されています。"
-        );
-        return;
-    }
-
-    subjects.push({
-        day: day,
-        period: period,
-        name: name,
-        assignments: []
-    });
-
-    saveData();
-
-    document.getElementById("subjectName").value = "";
-
-    showMessage(
-        "subjectMessage",
-        "授業を登録しました。",
-        true
-    );
-
-    updateAll();
-}
-
-function registerAssignment() {
-
-    if (subjects.length === 0) {
-        showMessage(
-            "assignmentMessage",
-            "エラー：授業が登録されていません。先に授業を登録してください。"
-        );
-        return;
-    }
-
-    const subjectIndex =
-        document.getElementById("subjectSelect").value;
-
-    const assignmentName =
-        document.getElementById("assignmentName")
-        .value
-        .trim();
-
-    if (assignmentName === "") {
-        showMessage(
-            "assignmentMessage",
-            "エラー：課題名を入力してください。"
-        );
-        return;
-    }
-
-    subjects[subjectIndex]
-        .assignments
-        .push(assignmentName);
-
-    saveData();
-
-    document.getElementById("assignmentName").value = "";
-
-    showMessage(
-        "assignmentMessage",
-        "課題を登録しました。",
-        true
-    );
-
-    updateAll();
-}
-
-function updateSubjectSelect() {
-
-    const select =
-        document.getElementById("subjectSelect");
-
-    select.innerHTML = "";
-
-    if (subjects.length === 0) {
-
-        const option =
-            document.createElement("option");
-
-        option.textContent =
-            "授業が登録されていません";
-
-        select.appendChild(option);
-
-        return;
-    }
-
-    subjects.forEach((subject, index) => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = index;
-
-        option.textContent =
-            `${subject.day} ${subject.period} - ${subject.name}`;
-
-        select.appendChild(option);
-    });
-}
-
-function updateTimetable() {
-
-    const body =
-        document.getElementById("timetableBody");
-
-    body.innerHTML = "";
-
-    PERIODS.forEach(period => {
-
-        const row =
-            document.createElement("tr");
-
-        const periodCell =
-            document.createElement("td");
-
-        periodCell.textContent = period;
-
-        row.appendChild(periodCell);
-
-        DAYS.forEach(day => {
-
-            const cell =
-                document.createElement("td");
-
-            cell.className = "timetable-cell";
-
-            const subject = subjects.find(
-                s => s.day === day &&
-                     s.period === period
-            );
-
-            if (subject) {
-
-                cell.innerHTML = `
-                    <div class="subject-name">
-                        ${subject.name}
-                    </div>
-                    <div class="assignment-count">
-                        課題: ${subject.assignments.length}件
-                    </div>
-                `;
-            }
-
-            row.appendChild(cell);
-        });
-
-        body.appendChild(row);
-    });
-}
-
-function updateSubjectList() {
-
-    const list =
-        document.getElementById("subjectList");
-
-    list.innerHTML = "";
-
-    if (subjects.length === 0) {
-
-        list.innerHTML =
-            '<p class="empty">授業が登録されていません。</p>';
-
-        return;
-    }
-
-    subjects.forEach(subject => {
-
-        const div =
-            document.createElement("div");
-
-        div.className = "subject-item";
-
-        let assignmentsHtml = "";
-
-        if (subject.assignments.length === 0) {
-
-            assignmentsHtml =
-                "<li>課題なし</li>";
-
+        if (success) {
+            message.className = "message success";
         } else {
+            message.className = "message error";
+        }
+    }
 
-            assignmentsHtml =
-                subject.assignments
-                .map(a => `<li>${a}</li>`)
-                .join("");
+    function registerSubject() {
+        const day = document.getElementById("daySelect").value;
+        const period = document.getElementById("periodSelect").value;
+        const subjectNameInput = document.getElementById("subjectName");
+        const subjectName = subjectNameInput.value.trim();
+
+        if (subjectName === "") {
+            showMessage(
+                "subjectMessage",
+                "エラー：授業名を入力してください。"
+            );
+            return;
         }
 
-        div.innerHTML = `
-            <strong>${subject.name}</strong><br>
-            曜日: ${subject.day}<br>
-            時限: ${subject.period}
+        const exists = subjects.some(function(subject) {
+            return subject.day === day && subject.period === period;
+        });
 
-            <div>
-                <strong>課題一覧</strong>
-                <ul class="assignment-list">
-                    ${assignmentsHtml}
-                </ul>
-            </div>
-        `;
+        if (exists) {
+            showMessage(
+                "subjectMessage",
+                "エラー：この曜日・時限にはすでに授業が登録されています。"
+            );
+            return;
+        }
 
-        list.appendChild(div);
-    });
-}
+        subjects.push({
+            day: day,
+            period: period,
+            name: subjectName,
+            assignments: []
+        });
 
-function updateAll() {
-    updateSubjectSelect();
-    updateTimetable();
-    updateSubjectList();
-}
+        saveData();
 
-updateAll();
+        showMessage(
+            "subjectMessage",
+            "授業を登録しました。",
+            true
+        );
+
+        subjectNameInput.value = "";
+
+        updateAll();
+    }
+
+    function registerAssignment() {
+        if (subjects.length === 0) {
+            showMessage(
+                "assignmentMessage",
+                "エラー：授業が登録されていません。先に授業を登録してください。"
+            );
+            return;
+        }
+
+        const subjectIndex = parseInt(
+            document.getElementById("assignmentSubjectSelect").value
+        );
+
+        const assignmentNameInput = document.getElementById("assignmentName");
+        const assignmentName = assignmentNameInput.value.trim();
+
+        if (assignmentName === "") {
+            showMessage(
+                "assignmentMessage",
+                "エラー：課題名を入力してください。"
+            );
+            return;
+        }
+
+        subjects[subjectIndex].assignments.push(assignmentName);
+
+        saveData();
+
+        showMessage(
+            "assignmentMessage",
+            "課題を登録しました。",
+            true
+        );
+
+        assignmentNameInput.value = "";
+
+        updateAll();
+    }
+
+    function deleteSubject() {
+        if (subjects.length === 0) {
+            showMessage(
+                "deleteMessage",
+                "エラー：削除できる授業がありません。"
+            );
+            return;
+        }
+
+        const subjectIndex = parseInt(
+            document.getElementById("deleteSubjectSelect").value
+        );
+
+        subjects.splice(subjectIndex, 1);
+
+        saveData();
+
+        showMessage(
+            "deleteMessage",
+            "授業を削除しました。",
+            true
+        );
+
+        updateAll();
+    }
+
+    function updateSubjectSelect() {
+        const select = document.getElementById("assignmentSubjectSelect");
+        select.innerHTML = "";
+
+        if (subjects.length === 0) {
+            const option = document.createElement("option");
+            option.textContent = "授業が登録されていません";
+            option.value = "";
+            select.appendChild(option);
+            return;
+        }
+
+        subjects.forEach(function(subject, index) {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent =
+                `${subject.day} ${subject.period} - ${subject.name}`;
+            select.appendChild(option);
+        });
+    }
+
+    function updateDeleteSubjectSelect() {
+        const select = document.getElementById("deleteSubjectSelect");
+        select.innerHTML = "";
+
+        if (subjects.length === 0) {
+            const option = document.createElement("option");
+            option.textContent = "削除できる授業がありません";
+            option.value = "";
+            select.appendChild(option);
+            return;
+        }
+
+        subjects.forEach(function(subject, index) {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent =
+                `${subject.day} ${subject.period} - ${subject.name}`;
+            select.appendChild(option);
+        });
+    }
+
+    function updateTimetable() {
+        const timetableArea = document.getElementById("timetableArea");
+
+        let html = "<table>";
+        html += "<tr>";
+        html += "<th>時限</th>";
+
+        days.forEach(function(day) {
+            html += `<th>${day}</th>`;
+        });
+
+        html += "</tr>";
+
+        periods.forEach(function(period) {
+            html += "<tr>";
+            html += `<th>${period}</th>`;
+
+            days.forEach(function(day) {
+                const subject = subjects.find(function(item) {
+                    return item.day === day && item.period === period;
+                });
+
+                if (subject) {
+                    html += `
+                        <td>
+                            <div class="subject-name">${subject.name}</div>
+                            <div class="assignment-count">
+                                課題: ${subject.assignments.length}件
+                            </div>
+                        </td>
+                    `;
+                } else {
+                    html += "<td></td>";
+                }
+            });
+
+            html += "</tr>";
+        });
+
+        html += "</table>";
+
+        timetableArea.innerHTML = html;
+    }
+
+    function updateSubjectList() {
+        const subjectListArea = document.getElementById("subjectListArea");
+        subjectListArea.innerHTML = "";
+
+        if (subjects.length === 0) {
+            subjectListArea.textContent = "授業が登録されていません。";
+            return;
+        }
+
+        subjects.forEach(function(subject, index) {
+            const div = document.createElement("div");
+            div.className = "subject-list-item";
+
+            let html = `
+                <strong>${index + 1}. ${subject.day} ${subject.period} - ${subject.name}</strong>
+            `;
+
+            if (subject.assignments.length === 0) {
+                html += "<p>課題なし</p>";
+            } else {
+                html += "<ul>";
+
+                subject.assignments.forEach(function(assignment, assignmentIndex) {
+                    html += `<li>${assignmentIndex + 1}. ${assignment}</li>`;
+                });
+
+                html += "</ul>";
+            }
+
+            div.innerHTML = html;
+            subjectListArea.appendChild(div);
+        });
+    }
+
+    function updateAll() {
+        updateSubjectSelect();
+        updateDeleteSubjectSelect();
+        updateTimetable();
+        updateSubjectList();
+    }
+
+    updateAll();
 </script>
 
 </body>
