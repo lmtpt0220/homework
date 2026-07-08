@@ -1,204 +1,508 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>授業課題管理アプリ</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>授業課題管理アプリ</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #f3f4f6;
+    font-family: sans-serif;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #e5e7eb;
+}
+
+.timetable-cell {
+    min-height: 70px;
+    font-size: 14px;
+}
+
+.subject-name {
+    font-weight: bold;
+}
+
+.assignment-count {
+    margin-top: 5px;
+    color: #2563eb;
+    font-size: 13px;
+}
+
+.subject-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.assignment-list {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+.empty {
+    color: #777;
+}
+
+@media (max-width: 768px) {
     body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f7f7f7;
+        padding: 10px;
     }
 
-    h1 {
-      text-align: center;
+    .card {
+        padding: 15px;
     }
 
-    section {
-      background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px #ccc;
-    }
-
-    input, select, button {
-      padding: 8px;
-      margin: 5px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
+    input,
+    select,
     button {
-      cursor: pointer;
+        font-size: 15px;
     }
-
-    .message {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .error {
-      color: red;
-    }
-
-    .success {
-      color: green;
-    }
-
-    ul {
-      background: #fafafa;
-      padding: 15px 30px;
-      border-radius: 5px;
-    }
-  </style>
+}
+</style>
 </head>
 <body>
 
-  <h1>授業課題管理アプリ</h1>
+<div class="container">
 
-  <section>
-    <h2>授業登録</h2>
-    <input type="text" id="subjectName" placeholder="授業名を入力してください">
-    <button onclick="registerSubject()">授業を登録</button>
-    <p id="subjectMessage" class="message"></p>
-  </section>
+    <h1>授業課題管理アプリ</h1>
 
-  <section>
-    <h2>課題登録</h2>
-    <select id="subjectSelect"></select>
-    <input type="text" id="assignmentName" placeholder="課題名を入力してください">
-    <button onclick="registerAssignment()">課題を登録</button>
-    <p id="assignmentMessage" class="message"></p>
-  </section>
+    <!-- 授業登録 -->
+    <div class="card">
+        <h2>授業登録</h2>
 
-  <section>
-    <h2>登録一覧</h2>
-    <button onclick="showList()">一覧を更新</button>
-    <div id="listArea"></div>
-  </section>
+        <div class="form-group">
+            <label>曜日</label>
+            <select id="day">
+                <option value="月曜">月曜</option>
+                <option value="火曜">火曜</option>
+                <option value="水曜">水曜</option>
+                <option value="木曜">木曜</option>
+                <option value="金曜">金曜</option>
+                <option value="土曜">土曜</option>
+            </select>
+        </div>
 
-  <script>
-    let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+        <div class="form-group">
+            <label>時限</label>
+            <select id="period">
+                <option value="1限">1限</option>
+                <option value="2限">2限</option>
+                <option value="3限">3限</option>
+                <option value="4限">4限</option>
+                <option value="5限">5限</option>
+                <option value="6限">6限</option>
+            </select>
+        </div>
 
-    function saveData() {
-      localStorage.setItem("subjects", JSON.stringify(subjects));
+        <div class="form-group">
+            <label>授業名</label>
+            <input type="text" id="subjectName">
+        </div>
+
+        <button onclick="registerSubject()">授業を登録する</button>
+
+        <div id="subjectMessage" class="message"></div>
+    </div>
+
+    <!-- 課題登録 -->
+    <div class="card">
+        <h2>課題登録</h2>
+
+        <div class="form-group">
+            <label>授業選択</label>
+            <select id="subjectSelect"></select>
+        </div>
+
+        <div class="form-group">
+            <label>課題名</label>
+            <input type="text" id="assignmentName">
+        </div>
+
+        <button onclick="registerAssignment()">課題を登録する</button>
+
+        <div id="assignmentMessage" class="message"></div>
+    </div>
+
+    <!-- 時間割 -->
+    <div class="card">
+        <h2>時間割表</h2>
+
+        <div class="table-wrapper">
+            <table id="timetable">
+                <thead>
+                    <tr>
+                        <th>時限</th>
+                        <th>月曜</th>
+                        <th>火曜</th>
+                        <th>水曜</th>
+                        <th>木曜</th>
+                        <th>金曜</th>
+                        <th>土曜</th>
+                    </tr>
+                </thead>
+                <tbody id="timetableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 一覧 -->
+    <div class="card">
+        <h2>授業・課題一覧</h2>
+        <div id="subjectList"></div>
+    </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = "subjects";
+
+const DAYS = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜"];
+const PERIODS = ["1限", "2限", "3限", "4限", "5限", "6限"];
+
+let subjects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+}
+
+function showMessage(elementId, text, success = false) {
+    const element = document.getElementById(elementId);
+
+    element.textContent = text;
+    element.className = success
+        ? "message success"
+        : "message error";
+}
+
+function registerSubject() {
+
+    const day = document.getElementById("day").value;
+    const period = document.getElementById("period").value;
+    const name = document.getElementById("subjectName").value.trim();
+
+    if (name === "") {
+        showMessage(
+            "subjectMessage",
+            "エラー：授業名を入力してください。"
+        );
+        return;
     }
 
-    function registerSubject() {
-      const subjectNameInput = document.getElementById("subjectName");
-      const message = document.getElementById("subjectMessage");
-      const subjectName = subjectNameInput.value.trim();
+    const exists = subjects.some(subject =>
+        subject.day === day &&
+        subject.period === period
+    );
 
-      if (subjectName === "") {
-        message.textContent = "エラー：授業名を入力してください。";
-        message.className = "message error";
+    if (exists) {
+        showMessage(
+            "subjectMessage",
+            "エラー：この曜日・時限にはすでに授業が登録されています。"
+        );
         return;
-      }
+    }
 
-      subjects.push({
-        name: subjectName,
+    subjects.push({
+        day: day,
+        period: period,
+        name: name,
         assignments: []
-      });
+    });
 
-      saveData();
+    saveData();
 
-      message.textContent = "授業を登録しました。";
-      message.className = "message success";
-      subjectNameInput.value = "";
+    document.getElementById("subjectName").value = "";
 
-      updateSubjectSelect();
-      showList();
+    showMessage(
+        "subjectMessage",
+        "授業を登録しました。",
+        true
+    );
+
+    updateAll();
+}
+
+function registerAssignment() {
+
+    if (subjects.length === 0) {
+        showMessage(
+            "assignmentMessage",
+            "エラー：授業が登録されていません。先に授業を登録してください。"
+        );
+        return;
     }
 
-    function updateSubjectSelect() {
-      const select = document.getElementById("subjectSelect");
-      select.innerHTML = "";
+    const subjectIndex =
+        document.getElementById("subjectSelect").value;
 
-      if (subjects.length === 0) {
-        const option = document.createElement("option");
-        option.textContent = "授業が登録されていません";
-        option.value = "";
-        select.appendChild(option);
+    const assignmentName =
+        document.getElementById("assignmentName")
+        .value
+        .trim();
+
+    if (assignmentName === "") {
+        showMessage(
+            "assignmentMessage",
+            "エラー：課題名を入力してください。"
+        );
         return;
-      }
+    }
 
-      subjects.forEach((subject, index) => {
-        const option = document.createElement("option");
-        option.textContent = subject.name;
+    subjects[subjectIndex]
+        .assignments
+        .push(assignmentName);
+
+    saveData();
+
+    document.getElementById("assignmentName").value = "";
+
+    showMessage(
+        "assignmentMessage",
+        "課題を登録しました。",
+        true
+    );
+
+    updateAll();
+}
+
+function updateSubjectSelect() {
+
+    const select =
+        document.getElementById("subjectSelect");
+
+    select.innerHTML = "";
+
+    if (subjects.length === 0) {
+
+        const option =
+            document.createElement("option");
+
+        option.textContent =
+            "授業が登録されていません";
+
+        select.appendChild(option);
+
+        return;
+    }
+
+    subjects.forEach((subject, index) => {
+
+        const option =
+            document.createElement("option");
+
         option.value = index;
+
+        option.textContent =
+            `${subject.day} ${subject.period} - ${subject.name}`;
+
         select.appendChild(option);
-      });
+    });
+}
+
+function updateTimetable() {
+
+    const body =
+        document.getElementById("timetableBody");
+
+    body.innerHTML = "";
+
+    PERIODS.forEach(period => {
+
+        const row =
+            document.createElement("tr");
+
+        const periodCell =
+            document.createElement("td");
+
+        periodCell.textContent = period;
+
+        row.appendChild(periodCell);
+
+        DAYS.forEach(day => {
+
+            const cell =
+                document.createElement("td");
+
+            cell.className = "timetable-cell";
+
+            const subject = subjects.find(
+                s => s.day === day &&
+                     s.period === period
+            );
+
+            if (subject) {
+
+                cell.innerHTML = `
+                    <div class="subject-name">
+                        ${subject.name}
+                    </div>
+                    <div class="assignment-count">
+                        課題: ${subject.assignments.length}件
+                    </div>
+                `;
+            }
+
+            row.appendChild(cell);
+        });
+
+        body.appendChild(row);
+    });
+}
+
+function updateSubjectList() {
+
+    const list =
+        document.getElementById("subjectList");
+
+    list.innerHTML = "";
+
+    if (subjects.length === 0) {
+
+        list.innerHTML =
+            '<p class="empty">授業が登録されていません。</p>';
+
+        return;
     }
 
-    function registerAssignment() {
-      const select = document.getElementById("subjectSelect");
-      const assignmentInput = document.getElementById("assignmentName");
-      const message = document.getElementById("assignmentMessage");
+    subjects.forEach(subject => {
 
-      if (subjects.length === 0) {
-        message.textContent = "エラー：授業が登録されていません。先に授業を登録してください。";
-        message.className = "message error";
-        return;
-      }
+        const div =
+            document.createElement("div");
 
-      const assignmentName = assignmentInput.value.trim();
+        div.className = "subject-item";
 
-      if (assignmentName === "") {
-        message.textContent = "エラー：課題名を入力してください。";
-        message.className = "message error";
-        return;
-      }
-
-      const subjectIndex = Number(select.value);
-      subjects[subjectIndex].assignments.push(assignmentName);
-
-      saveData();
-
-      message.textContent = "課題を登録しました。";
-      message.className = "message success";
-      assignmentInput.value = "";
-
-      showList();
-    }
-
-    function showList() {
-      const listArea = document.getElementById("listArea");
-      listArea.innerHTML = "";
-
-      if (subjects.length === 0) {
-        listArea.textContent = "授業が登録されていません。";
-        return;
-      }
-
-      subjects.forEach((subject, i) => {
-        const title = document.createElement("h3");
-        title.textContent = `${i + 1}. ${subject.name}`;
-        listArea.appendChild(title);
-
-        const ul = document.createElement("ul");
+        let assignmentsHtml = "";
 
         if (subject.assignments.length === 0) {
-          const li = document.createElement("li");
-          li.textContent = "課題なし";
-          ul.appendChild(li);
+
+            assignmentsHtml =
+                "<li>課題なし</li>";
+
         } else {
-          subject.assignments.forEach((assignment, j) => {
-            const li = document.createElement("li");
-            li.textContent = `${j + 1}. ${assignment}`;
-            ul.appendChild(li);
-          });
+
+            assignmentsHtml =
+                subject.assignments
+                .map(a => `<li>${a}</li>`)
+                .join("");
         }
 
-        listArea.appendChild(ul);
-      });
-    }
+        div.innerHTML = `
+            <strong>${subject.name}</strong><br>
+            曜日: ${subject.day}<br>
+            時限: ${subject.period}
 
+            <div>
+                <strong>課題一覧</strong>
+                <ul class="assignment-list">
+                    ${assignmentsHtml}
+                </ul>
+            </div>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+function updateAll() {
     updateSubjectSelect();
-    showList();
-  </script>
+    updateTimetable();
+    updateSubjectList();
+}
+
+updateAll();
+</script>
 
 </body>
 </html>
