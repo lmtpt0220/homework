@@ -48,12 +48,6 @@ GitHub Pagesで公開できるように、HTML・CSS・JavaScriptのみで作成
 
 ただし、別の端末や別のブラウザとはデータを共有できません。
 
-## 使用技術
-
-- HTML
-- CSS
-- JavaScript
-- localStorage
 
 ## データ構造
 
